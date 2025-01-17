@@ -6,7 +6,9 @@ This package can be installed as a [Composer](https://getcomposer.org/) dependen
 composer require kim1ne/loop-server
 ```
 
-This component unites all libraries, where needs start an infinite process. Example: creation loop-server with the [kafka worker](https://github.com/kim1ne/kim1ne-kafka) and the [socket server](https://github.com/kim1ne/socket-server):
+This component unites all libraries, where needs start an infinite process. Example:
+ ***
+Producers publishing message to the kafka. Workers expect messages from the kafka and when got messages, sending to the socket server. The socket-server sending messages to all connected clients
 ```php
 use RdKafka\Conf;
 use Kim1ne\Socket\Server\Server;
