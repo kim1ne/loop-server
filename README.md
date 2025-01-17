@@ -9,6 +9,7 @@ composer require kim1ne/loop-server
 This component unites all libraries, where needs start an infinite process. Example:
  ***
 Producers publishing message to the kafka. Workers expect messages from the kafka and when got messages, sending to the socket server. The socket-server sending messages to all connected clients
+![image](https://github.com/user-attachments/assets/5657a5c2-7583-492c-ad05-bf16f2aeac2a)
 ```php
 use RdKafka\Conf;
 use Kim1ne\Socket\Server\Server;
