@@ -2,8 +2,8 @@
 
 namespace Kim1ne\Loop;
 
-use Kim1ne\InputMessage;
-use Kim1ne\Looper;
+use Kim1ne\Core\InputMessage;
+use Kim1ne\Core\LooperInterface;
 use React\EventLoop\Loop;
 
 class Server
@@ -11,7 +11,7 @@ class Server
     private static bool $start = false;
     private static array $hash2worker = [];
 
-    public static function run(Looper ...$loopers): void
+    public static function run(LooperInterface ...$loopers): void
     {
         if (self::$start) {
             return;
@@ -20,6 +20,8 @@ class Server
         if (self::isCli() === false) {
             throw new \Exception('Must be run from the command line.');
         }
+
+        InputMessage::green('The Loop Server started.');
 
         self::$start = true;
         $loop = Loop::get();
@@ -31,8 +33,6 @@ class Server
             $stream->run();
         }
 
-        InputMessage::green('Start the Loop Server');
-
         register_shutdown_function(function ($loop) {
             $loop->stop();
         }, $loop);
@@ -40,17 +40,29 @@ class Server
         $loop->run();
     }
 
-    private static function add(Looper $worker): void
+    /**
+     * @return LooperInterface[]
+     */
+    public static function getWorkers(): array
+    {
+        if (self::$start === false) {
+            return [];
+        }
+
+        return self::$hash2worker;
+    }
+
+    private static function add(LooperInterface $worker): void
     {
         self::$hash2worker[self::getHashWorker($worker)] = $worker;
     }
 
-    private static function getHashWorker(Looper $worker): string
+    private static function getHashWorker(LooperInterface $worker): string
     {
         return spl_object_hash($worker);
     }
 
-    public static function destroy(Looper $worker): void
+    public static function destroy(LooperInterface $worker): void
     {
         if (self::$start === false) {
             return;
@@ -67,8 +79,12 @@ class Server
         $worker->stop();
         unset(self::$hash2worker[$hash]);
 
+        InputMessage::green($worker->getScopeName() . ' - stopped.');
+
         if (empty(self::$hash2worker)) {
             Loop::get()->stop();
+
+            InputMessage::green('The Loop Server stopped.');
         }
     }
 
