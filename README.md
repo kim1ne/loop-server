@@ -42,7 +42,7 @@ $worker->on(function (KafkaMessage $message, KafkaConsumer $consumer) use ($serv
 <details>
     <summary>Version 1.1.0</summary>
 
-- All components got update 1.1.0
+- All components have been updated 1.1.0
 - A component has a scope-name. It has the method - getScopeName() - returns the scope-name. All events, which sends a component will be merge with the scope-name.
 - All components are isolated from each other. A component can send an event, and another component will be waiting for the event
 ----
