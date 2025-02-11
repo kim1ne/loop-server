@@ -38,3 +38,43 @@ $worker->on(function (KafkaMessage $message, KafkaConsumer $consumer) use ($serv
 
 \Kim1ne\Loop\Server::run($server, $worker);
 ```
+
+<details>
+    <summary>Version 1.1.0</summary>
+
+- All components got update 1.1.0
+- A component has a scope-name. It has the method - getScopeName() - returns the scope-name. All events, which sends a component will be merge with the scope-name.
+- All components are isolated from each other. A component can send an event, and another component will be waiting for the event
+----
+Example:
+the object [KafkaWorker](https://github.com/kim1ne/kim1ne-kafka/blob/main/src/Kafka/KafkaWorker.php) has scope-name - kafka:worker, and sending an event message, the event will be named kafka:worker:message
+
+```php
+use Kim1ne\Socket\Server\Server;
+use Kim1ne\Socket\Server\Transport;
+use Kim1ne\Core\Event;
+use Kim1ne\Kafka\KafkaWorker;
+use RdKafka\Conf;
+use Kim1ne\Kafka\Message;
+use Kim1ne\Kafka\KafkaConsumer;
+use Kim1ne\Core\Event;
+
+$server = $server = new Server(transport: Transport::WS);
+
+$conf = new Conf(...);
+
+$worker = new KafkaWorker($conf);
+$worker->subscribe(['my-topic'])
+
+$server->on('kafka:worker:message', function (Event $event) use ($server) {
+    $message = $event->get('message');
+    $server->sendAll($message);
+});
+
+$worker->on('message', function (Message $message, KafkaConsumer $consumer) use ($worker) {
+    $worker->dispatchEvent('message', new Event([
+        'message' => $message->payload
+    ]));
+});
+```
+</details>
