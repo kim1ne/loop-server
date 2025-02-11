@@ -47,7 +47,7 @@ $worker->on(function (KafkaMessage $message, KafkaConsumer $consumer) use ($serv
 - All components are isolated from each other. A component can send an event, and another component will be waiting for the event
 ----
 Example:
-the object [KafkaWorker](https://github.com/kim1ne/kim1ne-kafka/blob/main/src/Kafka/KafkaWorker.php) has scope-name - `kafka:worker`, and sends an event `message`, the event will be called `kafka:worker:message`
+the object [KafkaWorker](https://github.com/kim1ne/kim1ne-kafka/blob/main/src/Kafka/KafkaWorker.php) has scope-name - `kafka:worker`, and sends an event `message`, the event will called `kafka:worker:message`
 
 ```php
 use Kim1ne\Socket\Server\Server;
