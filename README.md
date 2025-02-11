@@ -51,26 +51,22 @@ the object [KafkaWorker](https://github.com/kim1ne/kim1ne-kafka/blob/main/src/Ka
 
 ```php
 use Kim1ne\Socket\Server\Server;
-use Kim1ne\Socket\Server\Transport;
-use Kim1ne\Core\Event;
 use Kim1ne\Kafka\KafkaWorker;
-use RdKafka\Conf;
 use Kim1ne\Kafka\Message;
 use Kim1ne\Kafka\KafkaConsumer;
 use Kim1ne\Core\Event;
 
-$server = $server = new Server(transport: Transport::WS);
-
-$conf = new Conf(...);
-
-$worker = new KafkaWorker($conf);
-$worker->subscribe(['my-topic'])
-
+/**
+ * @var Server $server
+ */
 $server->on('kafka:worker:message', function (Event $event) use ($server) {
     $message = $event->get('message');
     $server->sendAll($message);
 });
 
+/**
+ * @var KafkaWorker $worker
+ */
 $worker->on('message', function (Message $message, KafkaConsumer $consumer) use ($worker) {
     $worker->dispatchEvent('message', new Event([
         'message' => $message->payload
