@@ -44,7 +44,7 @@ $worker->on(function (KafkaMessage $message, KafkaConsumer $consumer) use ($serv
 
 - All components have been updated 1.1.0
 - A component has a scope-name. It has the method - getScopeName() - returns the scope-name. All events, which sends a component will be merge with the scope-name.
-- All components are isolated from each other. A component can send an event, and another component will waiting for the event
+- All components are isolated from each other. A component can sends an event, and another component will waiting for the event
 ----
 Example:
 the object [KafkaWorker](https://github.com/kim1ne/kim1ne-kafka/blob/main/src/Kafka/KafkaWorker.php) has scope-name - `kafka:worker`, and sends an event `message`, the event will called `kafka:worker:message`
