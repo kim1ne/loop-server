@@ -9,6 +9,10 @@ use React\EventLoop\Loop;
 class Server
 {
     private static bool $start = false;
+
+    /**
+     * @var LooperInterface[]
+     */
     private static array $hash2worker = [];
 
     public static function run(LooperInterface ...$loopers): void
@@ -34,6 +38,7 @@ class Server
         }
 
         register_shutdown_function(function ($loop) {
+            self::stop();
             $loop->stop();
         }, $loop);
 
@@ -76,8 +81,8 @@ class Server
 
         $worker = self::$hash2worker[$hash];
 
-        $worker->stop();
         unset(self::$hash2worker[$hash]);
+        $worker->stop();
 
         InputMessage::green($worker->getScopeName() . ' - stopped.');
 
@@ -88,7 +93,7 @@ class Server
         }
     }
 
-    public static function stop(): void
+    private static function stop(): void
     {
         if (self::$start === false) {
             return;
